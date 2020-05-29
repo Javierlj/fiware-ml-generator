@@ -1,45 +1,47 @@
-version: "2"
+version: "3.1"
 services:
-  mongo:
-    container_name: mongo
-    image: mongo:3.4
-    command: --nojournal
-    networks:
-      - fiware
+  mongo-db:
+    image: mongo:3.6
+    hostname: mongo-db
+    container_name: db-mongo
+    expose:
+      - "27017"
     ports:
       - "27017:27017"
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=example
+    networks:
+      - fiware-ml
+    command: --bind_ip_all --smallfiles
+    volumes:
+      - mongo-db:/data
   orion:
-    container_name: orion
-    image: fiware/orion
-    links:
-      - mongo
+    image: fiware/orion:2.2.0
+    hostname: orion
+    container_name: fiware-orion
+    depends_on:
+      - mongo-db
+    networks:
+      - fiware-ml
+    expose:
+      - "1026"
     ports:
       - "1026:1026"
+    command: -dbhost mongo-db #-logLevel DEBUG
+    healthcheck:
+      test: curl --fail -s http://localhost:1026/version || exit 1
+  web:
+    container_name: web
+    build:
+      context: ./web
+    ports:
+      - "3000:3000"
     depends_on:
-      - mongo
-    restart: always
-    command: -dbhost mongo -dbuser root -dbpwd example #-logLevel DEBUG
+      - orion
     networks:
-      - fiware
-  # web:
-  #   container_name: web
-  #   build:
-  #     context: ./web
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - orion
-  #   networks:
-  #     - fiware
-  #   command: bash -c "sleep 15 && sh /entities/createPredictionReqEntity.sh && sh /entities/createPredictionResEntity.sh && sh /entities/subscribeReqPredictionTicket.sh && sh /entities/subscribeResPredictionTicket.sh && npm start"
-  #   environment:
-  #     - URL_CB=http://orion:1026/v2/entities/ReqTicketPrediction1/attrs
-  #     - MONGO_URI=mongodb://root:example@mongo:27017/sth_test?authSource=admin
-  #   volumes:
-  #     - ./entities:/entities
+      - fiware-ml
+    command: bash -c "sleep 20 && ls -l ./public  && sh /entities/createPredictionReqEntity.sh && sh /entities/createPredictionResEntity.sh && sh /entities/subscribeReqPredictionTicket.sh && sh /entities/subscribeResPredictionTicket.sh && npm start"
+    environment:
+      - URL_CB=http://orion:1026/v2/entities/ReqTicketPrediction1/attrs
+      - MONGO_URI=mongodg 
   # spark-master:
   #   image: bde2020/spark-master:2.4.4-hadoop2.7
   #   container_name: spark-master
@@ -108,4 +110,7 @@ services:
   #     - ./entities:/entities
 
 networks:
-  fiware:
+  fiware-ml:
+
+volumes:
+  mongo-db: 

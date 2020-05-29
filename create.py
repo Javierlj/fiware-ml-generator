@@ -29,10 +29,10 @@ secondLine = infile.readline()
 typesOf = secondLine.split(",")
 typesOf[-1] = typesOf[-1].strip()
 
-typesOf = map(lambda x: "Float" if x.isdigit() else "String", typesOf)
+typesOf = list(map(lambda x: "Float" if x.isdigit() else "String", typesOf))
 
-# print("variables", variables)
-# print("typesOf", typesOf)
+#print("variables", variables)
+#print("typesOf", typesOf)
 
 questionsInput = [
     {
@@ -68,10 +68,10 @@ output = answersOutput["Output"]
 
 
 def createObj(n):
+    typeOf = typesOf[variables.index(n)]
     return "\""+str(n) + """\": {
 "value": 0,
-"type": "String"
-},\n"""
+"type": """+typeOf+"\n},\n"
 
 # Create Prediction Req Entity
 
@@ -79,7 +79,7 @@ def createObj(n):
 # input file
 fin = open("entitiesTemplates/createPredictionReqEntity.sh", "rt")
 # output file to write the result to
-fout = open("entities/createPredictionReqEntity.sh", "wt")
+fout = open("web/entities/createPredictionReqEntity.sh", "wt")
 # for each line in the input file
 for line in fin:
         # read replace the string and write to output file
@@ -90,13 +90,16 @@ for line in fin:
 # close input and output files
 fin.close()
 fout.close()
+
+os.system("sudo chmod +x ./web/entities/createPredictionReqEntity.sh")
+
 
 # Create Predictions Res Entity
 
 # input file
 fin = open("entitiesTemplates/createPredictionResEntity.sh", "rt")
 # output file to write the result to
-fout = open("entities/createPredictionResEntity.sh", "wt")
+fout = open("web/entities/createPredictionResEntity.sh", "wt")
 # for each line in the input file
 for line in fin:
         # read replace the string and write to output file
@@ -107,6 +110,8 @@ for line in fin:
 # close input and output files
 fin.close()
 fout.close()
+
+os.system("sudo chmod +x ./web/entities/createPredictionResEntity.sh")
 
 
 def enumerate(n):
@@ -117,7 +122,7 @@ def enumerate(n):
 
 fin = open("entitiesTemplates/subscribeReqPredictionTicket.sh", "rt")
 # output file to write the result to
-fout = open("entities/subscribeReqPredictionTicket.sh", "wt")
+fout = open("web/entities/subscribeReqPredictionTicket.sh", "wt")
 # for each line in the input file
 for line in fin:
         # read replace the string and write to output file
@@ -128,12 +133,15 @@ for line in fin:
 # close input and output files
 fin.close()
 fout.close()
+
+
+os.system("sudo chmod +x ./web/entities/subscribeReqPredictionTicket.sh")
 
 # Subscription Res Predictions Tickets
 
 fin = open("entitiesTemplates/subscribeResPredictionTicket.sh", "rt")
 # output file to write the result to
-fout = open("entities/subscribeResPredictionTicket.sh", "wt")
+fout = open("web/entities/subscribeResPredictionTicket.sh", "wt")
 # for each line in the input file
 for line in fin:
         # read replace the string and write to output file
@@ -144,12 +152,15 @@ for line in fin:
 # close input and output files
 fin.close()
 fout.close()
+
+os.system("sudo chmod +x ./web/entities/subscribeResPredictionTicket.sh")
+
 
 # Subscription Req Predictions Tickets
 
 fin = open("entitiesTemplates/subscribeResPredictionTicketDraco.sh", "rt")
 # output file to write the result to
-fout = open("entities/subscribeResPredictionTicketDraco.sh", "wt")
+fout = open("web/entities/subscribeResPredictionTicketDraco.sh", "wt")
 # for each line in the input file
 for line in fin:
         # read replace the string and write to output file
@@ -160,6 +171,8 @@ for line in fin:
 # close input and output files
 fin.close()
 fout.close()
+
+os.system("sudo chmod +x ./web/entities/subscribeResPredictionTicketDraco.sh")
 
 
 # print("inputs", inputs)
