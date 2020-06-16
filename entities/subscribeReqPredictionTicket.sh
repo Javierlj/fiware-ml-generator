@@ -12,13 +12,7 @@ curl -v orion:1026/v2/subscriptions -s -S -H 'Content-Type: application/json' -d
   	"attrs": [
       "predictionId",
       "socketId",
-"date",
-"time",
-"day",
-"month",
-"year",
-"weekDay",
-  	]
+"time","day","month","year","weekDay"  	]
 	}
   },
   "notification": {
@@ -28,13 +22,7 @@ curl -v orion:1026/v2/subscriptions -s -S -H 'Content-Type: application/json' -d
 	"attrs": [
       "predictionId",
       "socketId",
-"date",
-"time",
-"day",
-"month",
-"year",
-"weekDay",
-	]
+"time","day","month","year","weekDay"	]
   },
   "expires": "2040-01-01T14:00:00.00Z",
   "throttling": 5

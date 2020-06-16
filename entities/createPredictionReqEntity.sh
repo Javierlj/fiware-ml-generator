@@ -10,31 +10,7 @@ curl orion:1026/v2/entities -s -S -H 'Content-Type: application/json' -d @- <<EO
     "value": 0,
     "type": "String"
   },
-"date": {
-"value": 0,
-"type": String
-},
-"time": {
-"value": 0,
-"type": Float
-},
-"day": {
-"value": 0,
-"type": Float
-},
-"month": {
-"value": 0,
-"type": Float
-},
-"year": {
-"value": 0,
-"type": Float
-},
-"weekDay": {
-"value": 0,
-"type": Float
-},
-}
+"time": {"value": 0,"type": "Int"},"day": {"value": 0,"type": "Int"},"month": {"value": 0,"type": "Int"},"year": {"value": 0,"type": "Int"},"weekDay": {"value": 0,"type": "Int"}}
 EOF
 
 

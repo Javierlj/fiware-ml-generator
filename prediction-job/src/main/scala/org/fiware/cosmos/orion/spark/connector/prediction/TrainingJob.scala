@@ -13,17 +13,6 @@ object TrainingJob {
 
   }
   def train(): RandomForestRegressionModel = {
-    val schema = StructType(
-      Array(StructField("id", IntegerType),
-            StructField("date", StringType),
-            StructField("time", IntegerType),
-            StructField("items", IntegerType),
-            StructField("day", IntegerType),
-            StructField("month", IntegerType),
-            StructField("year", IntegerType),
-            StructField("weekDay", IntegerType)
-      ))
-
     val spark = SparkSession
       .builder
       .appName("StructuredNetworkWordCount")
@@ -38,18 +27,18 @@ object TrainingJob {
       .schema(schema)
       .option("header", "true")
       .option("delimiter", ",")
-      .load("./prediction-job/carrefour_data.csv")
+      .option("inferSchema","true")
+      .option("dateFormat","yyyy-MM-dd")
+      .load("./data.csv")
       .drop("id")
       .withColumnRenamed("items","label")
-
     val assembler = new VectorAssembler()
-        .setInputCols(Array("year", "month", "day", "weekDay","time" ))
-        .setOutputCol("features")
+      .setInputCols(Array("time","day","month","year","weekDay"))        .setOutputCol("features")
 
     // Automatically identify categorical features, and index them.
     var transformedDf = assembler.transform(data)
 
-    // Split the data into training and test sets (30% held out for testing).
+    // Split the data into training and test sets (20% held out for testing).
     val Array(trainingData, testData) = transformedDf.randomSplit(Array(0.8, 0.2))
 
     // Train a RandomForest model.

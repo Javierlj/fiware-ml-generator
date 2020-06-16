@@ -12,18 +12,16 @@ import org.apache.spark.sql.SparkSession
   * @author @sonsoleslp
   */
 
-case class PredictionResponse(socketId: String, predictionId: String, predictionValue: Int, year: Int, month: Int, day: Int, time: Int) {
+case class PredictionResponse(socketId: String, predictionId: String, predictionValue: Int,
+time: Int,day: Int,month: Int,year: Int,weekDay: Int) {
   override def toString :String = s"""{
   "socketId": { "value": "${socketId}", "type": "String"},
   "predictionId": { "value":"${predictionId}", "type": "String"},
   "predictionValue": { "value":${predictionValue}, "type": "Integer"},
-  "year": { "value":${year}, "type": "Integer"},
-  "month": { "value":${month}, "type": "Integer"},
-  "day": { "value":${day}, "type": "Integer"},
-  "time": { "value": ${time}, "type": "Integer"}
-  }""".trim()
+time: Int,day: Int,month: Int,year: Int,weekDay: Int  }""".trim()
 }
-case class PredictionRequest(year: Int, month: Int, day: Int, weekDay: Int, time: Int, socketId: String, predictionId: String)
+case class PredictionRequest(socketId: String, predictionId: String,
+time: Int,day: Int,month: Int,year: Int,weekDay: Int)
 
 object PredictionJob {
   final val URL_CB = "http://orion:1026/v2/entities/ResTicketPrediction1/attrs"
@@ -47,7 +45,8 @@ object PredictionJob {
     //    val vectorAssemblerPath = "%s/models/numeric_vector_assembler.bin".format(BASE_PATH)
     //    val vectorAssembler = VectorAssembler.load(vectorAssemblerPath)
     val vectorAssembler = new VectorAssembler()
-      .setInputCols(Array("year", "month", "day", "weekDay", "time"))
+      .setInputCols(Array(
+time: Int,day: Int,month: Int,year: Int,weekDay: Int      ))
       .setOutputCol("features")
 
     // Load model
@@ -61,14 +60,10 @@ object PredictionJob {
     val processedDataStream = eventStream
       .flatMap(event => event.entities)
       .map(ent => {
-        val year = ent.attrs("year").value.toString.toInt
-        val month = ent.attrs("month").value.toString.toInt
-        val day = ent.attrs("day").value.toString.toInt
-        val time = ent.attrs("time").value.toString.toInt
-        val weekDay = ent.attrs("weekDay").value.toString.toInt
-        val socketId = ent.attrs("socketId").value.toString
+time: Int,day: Int,month: Int,year: Int,weekDay: Int        val socketId = ent.attrs("socketId").value.toString
         val predictionId = ent.attrs("predictionId").value.toString
-        PredictionRequest(year, month, day, weekDay, time, socketId, predictionId)
+        PredictionRequest(socketId, predictionId,
+time: Int,day: Int,month: Int,year: Int,weekDay: Int        )
       })
 
     // Feed each entity into the prediction model
@@ -87,11 +82,7 @@ object PredictionJob {
       .map(pred=> PredictionResponse(pred.get(0).toString,
         pred.get(1).toString,
         pred.get(2).toString.toFloat.round,
-        pred.get(3).toString.toInt,
-        pred.get(4).toString.toInt,
-        pred.get(5).toString.toInt,
-        pred.get(6).toString.toInt)
-    )
+pred.get(").toString.toInt,pred.get([).toString.toInt,pred.get(u).toString.toInt,pred.get(').toString.toInt,pred.get(t).toString.toInt,pred.get(i).toString.toNone,pred.get(m).toString.toNone,pred.get(e).toString.toNone,pred.get(').toString.toNone,pred.get(,).toString.toNone,pred.get( ).toString.toNone,pred.get(u).toString.toNone,pred.get(').toString.toNone,pred.get(d).toString.toNone,pred.get(a).toString.toNone,pred.get(y).toString.toNone,pred.get(').toString.toNone,pred.get(,).toString.toNone,pred.get( ).toString.toNone,pred.get(u).toString.toNone,pred.get(').toString.toNone,pred.get(m).toString.toNone,pred.get(o).toString.toNone,pred.get(n).toString.toNone,pred.get(t).toString.toNone,pred.get(h).toString.toNone,pred.get(').toString.toNone,pred.get(,).toString.toNone,pred.get( ).toString.toNone,pred.get(u).toString.toNone,pred.get(').toString.toNone,pred.get(y).toString.toNone,pred.get(e).toString.toNone,pred.get(a).toString.toNone,pred.get(r).toString.toNone,pred.get(').toString.toNone,pred.get(,).toString.toNone,pred.get( ).toString.toNone,pred.get(u).toString.toNone,pred.get(').toString.toNone,pred.get(w).toString.toNone,pred.get(e).toString.toNone,pred.get(e).toString.toNone,pred.get(k).toString.toNone,pred.get(D).toString.toNone,pred.get(a).toString.toNone,pred.get(y).toString.toNone,pred.get(').toString.toNone,pred.get(]).toString.toNone,pred.get(").toString.toNone    )
 
     // Convert the output to an OrionSinkObject and send to Context Broker
     val sinkDataStream = predictionDataStream
