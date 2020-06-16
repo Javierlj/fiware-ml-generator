@@ -1,0 +1,1 @@
+{"inputs": [{"type": "Int", "name": "time"}, {"type": "Int", "name": "day"}, {"type": "Int", "name": "month"}, {"type": "Int", "name": "year"}, {"type": "Int", "name": "weekDay"}], "output": {"type": "Int", "name": "items"}}
